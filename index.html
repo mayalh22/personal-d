@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Personal Dashboard</title>
-    <style>
+    <style id="themeStyle">
         * {
             margin: 0;
             padding: 0;
@@ -12,26 +12,13 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
-            color: var(--text-primary);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             min-height: 100vh;
             padding: 1rem;
-            --bg-primary: #0f172a;
-            --bg-secondary: #1e293b;
-            --card-bg: #1e293b;
-            --accent: #3b82f6;
-            --accent-light: #60a5fa;
-            --text-primary: #f1f5f9;
-            --text-secondary: #cbd5e1;
-            --border: #334155;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1600px;
             margin: 0 auto;
         }
 
@@ -56,8 +43,6 @@
         }
 
         button {
-            background: var(--accent);
-            color: white;
             border: none;
             padding: 0.5rem 1rem;
             border-radius: 0.5rem;
@@ -68,65 +53,50 @@
         }
 
         button:hover {
-            background: var(--accent-light);
             transform: translateY(-2px);
         }
 
         button.secondary {
-            background: var(--card-bg);
-            color: var(--text-primary);
-            border: 1px solid var(--border);
-        }
-
-        button.secondary:hover {
-            background: var(--border);
+            border: 1px solid;
         }
 
         button.danger {
-            background: var(--danger);
         }
 
-        button.danger:hover {
-            background: #dc2626;
-        }
-
-        .grid {
+        .main-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .left-side {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
         }
 
         .card {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
+            border: 1px solid;
             border-radius: 0.75rem;
             padding: 1.5rem;
             transition: all 0.3s ease;
+            flex: 1;
         }
 
         .card:hover {
-            border-color: var(--accent);
             transform: translateY(-2px);
         }
 
         .card h2 {
             font-size: 1.125rem;
             margin-bottom: 1rem;
-            color: var(--accent);
-        }
-
-        .section-full {
-            grid-column: 1 / -1;
         }
 
         input, textarea, select {
             width: 100%;
             padding: 0.5rem;
-            border: 1px solid var(--border);
+            border: 1px solid;
             border-radius: 0.375rem;
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--text-primary);
             font-family: inherit;
             font-size: 0.875rem;
             margin-bottom: 0.5rem;
@@ -134,8 +104,7 @@
 
         input:focus, textarea:focus, select:focus {
             outline: none;
-            border-color: var(--accent);
-            background: rgba(59, 130, 246, 0.1);
+            border-width: 2px;
         }
 
         .form-group {
@@ -146,12 +115,10 @@
             display: block;
             font-size: 0.875rem;
             margin-bottom: 0.25rem;
-            color: var(--text-secondary);
         }
 
-        .bookmark-item, .class-item, .event-item {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border);
+        .bookmark-item, .class-item, .event-item, .assignment-item {
+            border: 1px solid;
             padding: 0.75rem;
             border-radius: 0.375rem;
             margin-bottom: 0.75rem;
@@ -162,7 +129,6 @@
         }
 
         .bookmark-item a {
-            color: var(--accent-light);
             text-decoration: none;
             word-break: break-word;
         }
@@ -183,7 +149,6 @@
 
         .item-details {
             font-size: 0.8rem;
-            color: var(--text-secondary);
             margin-top: 0.25rem;
         }
 
@@ -191,6 +156,7 @@
             display: flex;
             gap: 0.5rem;
             white-space: nowrap;
+            flex-wrap: wrap;
         }
 
         .item-actions button {
@@ -212,7 +178,6 @@
 
         .color-input label {
             font-size: 0.75rem;
-            color: var(--text-secondary);
         }
 
         .color-picker-wrapper {
@@ -224,7 +189,7 @@
         input[type="color"] {
             width: 50px;
             height: 35px;
-            border: 1px solid var(--border);
+            border: 1px solid;
             border-radius: 0.375rem;
             cursor: pointer;
             padding: 2px;
@@ -251,7 +216,6 @@
             text-align: center;
             font-size: 0.75rem;
             font-weight: 600;
-            color: var(--text-secondary);
             padding: 0.5rem 0;
         }
 
@@ -260,34 +224,29 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 1px solid var(--border);
+            border: 1px solid;
             border-radius: 0.375rem;
             cursor: pointer;
             font-size: 0.75rem;
-            background: rgba(255, 255, 255, 0.02);
             transition: all 0.2s ease;
         }
 
         .calendar-day:hover {
-            background: rgba(59, 130, 246, 0.2);
-            border-color: var(--accent);
+            transform: scale(1.05);
         }
 
         .calendar-day.has-event {
-            background: rgba(59, 130, 246, 0.3);
-            border-color: var(--accent);
             font-weight: 600;
         }
 
         .calendar-day.other-month {
-            color: var(--text-secondary);
             opacity: 0.5;
         }
 
         .event-form {
             margin-top: 1rem;
             padding-top: 1rem;
-            border-top: 1px solid var(--border);
+            border-top: 1px solid;
         }
 
         .modal {
@@ -297,7 +256,6 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
             z-index: 1000;
             align-items: center;
             justify-content: center;
@@ -309,8 +267,7 @@
         }
 
         .modal-content {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
+            border: 1px solid;
             border-radius: 0.75rem;
             padding: 1.5rem;
             width: 100%;
@@ -325,7 +282,7 @@
             align-items: center;
             margin-bottom: 1rem;
             padding-bottom: 1rem;
-            border-bottom: 1px solid var(--border);
+            border-bottom: 1px solid;
         }
 
         .modal-header h3 {
@@ -335,7 +292,6 @@
         .close-btn {
             background: none;
             border: none;
-            color: var(--text-secondary);
             cursor: pointer;
             font-size: 1.5rem;
             padding: 0;
@@ -343,22 +299,38 @@
         }
 
         .close-btn:hover {
-            color: var(--text-primary);
             transform: none;
         }
 
         .empty-state {
             text-align: center;
-            color: var(--text-secondary);
             padding: 1rem;
             font-size: 0.875rem;
         }
 
-        @media (max-width: 768px) {
-            .grid {
+        .assignment-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-right: 0.5rem;
+        }
+
+        .assignment-list {
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 1024px) {
+            .main-grid {
                 grid-template-columns: 1fr;
             }
+        }
 
+        @media (max-width: 768px) {
             header {
                 flex-direction: column;
                 align-items: flex-start;
@@ -373,11 +345,11 @@
                 font-size: 1.5rem;
             }
 
-            .color-inputs {
-                grid-template-columns: 1fr;
+            .left-side {
+                gap: 1.5rem;
             }
 
-            .bookmark-item, .class-item, .event-item {
+            .bookmark-item, .class-item, .event-item, .assignment-item {
                 flex-direction: column;
             }
 
@@ -385,15 +357,6 @@
                 width: 100%;
                 justify-content: flex-start;
             }
-        }
-
-        .success-message {
-            background: var(--success);
-            color: white;
-            padding: 0.75rem;
-            border-radius: 0.375rem;
-            margin-bottom: 1rem;
-            font-size: 0.875rem;
         }
     </style>
 </head>
@@ -408,23 +371,26 @@
             </div>
         </header>
 
-        <div class="grid">
-            <!-- Bookmarks Section -->
-            <div class="card">
-                <h2>Bookmarks</h2>
-                <div id="bookmarksList"></div>
-                <button onclick="openBookmarkModal(null)" style="width: 100%;">+ Add Bookmark</button>
+        <div class="main-grid">
+            <!-- Left Side: Bookmarks and Classes -->
+            <div class="left-side">
+                <!-- Bookmarks Section -->
+                <div class="card">
+                    <h2>Bookmarks</h2>
+                    <div id="bookmarksList"></div>
+                    <button onclick="openBookmarkModal(null)" style="width: 100%;">+ Add Bookmark</button>
+                </div>
+
+                <!-- Classes Section -->
+                <div class="card">
+                    <h2>Classes</h2>
+                    <div id="classesList"></div>
+                    <button onclick="openClassModal(null)" style="width: 100%;">+ Add Class</button>
+                </div>
             </div>
 
-            <!-- Classes Section -->
+            <!-- Right Side: Calendar -->
             <div class="card">
-                <h2>Classes</h2>
-                <div id="classesList"></div>
-                <button onclick="openClassModal(null)" style="width: 100%;">+ Add Class</button>
-            </div>
-
-            <!-- Calendar Section -->
-            <div class="card section-full">
                 <h2>Calendar</h2>
                 <div class="calendar">
                     <div class="calendar-header">
@@ -501,44 +467,73 @@
             </div>
             <div class="form-group">
                 <label>Notes (optional)</label>
-                <textarea id="classNotes" placeholder="Add any notes..." rows="3"></textarea>
+                <textarea id="classNotes" placeholder="Add any notes..." rows="2"></textarea>
             </div>
             <button onclick="saveClass()" style="width: 100%; margin-bottom: 0.5rem;">Save Class</button>
             <button class="secondary" onclick="closeModal('classModal')" style="width: 100%;">Cancel</button>
         </div>
     </div>
 
+    <!-- Assignment Modal -->
+    <div id="assignmentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add Assignment/Test</h3>
+                <button class="close-btn" onclick="closeModal('assignmentModal')">×</button>
+            </div>
+            <div class="form-group">
+                <label>Type</label>
+                <select id="assignmentType">
+                    <option value="homework">Homework</option>
+                    <option value="test">Test</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Title</label>
+                <input type="text" id="assignmentTitle" placeholder="e.g., Chapter 5 Assignment">
+            </div>
+            <div class="form-group">
+                <label>Due Date</label>
+                <input type="date" id="assignmentDue">
+            </div>
+            <div class="form-group">
+                <label>Details (optional)</label>
+                <textarea id="assignmentDetails" placeholder="Add any details..." rows="2"></textarea>
+            </div>
+            <button onclick="saveAssignment()" style="width: 100%; margin-bottom: 0.5rem;">Add</button>
+            <button class="secondary" onclick="closeModal('assignmentModal')" style="width: 100%;">Cancel</button>
+        </div>
+    </div>
+
     <script>
         const STORAGE_KEY = 'personalDashboard';
         const DEFAULT_COLORS = {
-            'bg-primary': '#0f172a',
-            'bg-secondary': '#1e293b',
-            'card-bg': '#1e293b',
+            'bg': '#0f172a',
+            'card': '#1e293b',
+            'text': '#f1f5f9',
             'accent': '#3b82f6',
-            'accent-light': '#60a5fa',
-            'text-primary': '#f1f5f9',
-            'text-secondary': '#cbd5e1',
-            'border': '#334155',
-            'success': '#10b981',
-            'warning': '#f59e0b',
-            'danger': '#ef4444'
+            'border': '#334155'
         };
 
         let currentDate = new Date();
         let editingBookmarkIndex = null;
         let editingClassIndex = null;
         let selectedDate = null;
-        let tempColors = {};
+        let currentClassForAssignment = null;
 
         // Data Management
         function loadData() {
             const stored = localStorage.getItem(STORAGE_KEY);
             if (stored) {
                 try {
-                    return JSON.parse(stored);
+                    const parsed = JSON.parse(stored);
+                    if (!parsed.colors) {
+                        parsed.colors = JSON.parse(JSON.stringify(DEFAULT_COLORS));
+                    }
+                    return parsed;
                 } catch (e) {
                     console.error('Error parsing stored data:', e);
-                    return { bookmarks: [], classes: [], events: {}, colors: DEFAULT_COLORS };
+                    return { bookmarks: [], classes: [], events: {}, colors: JSON.parse(JSON.stringify(DEFAULT_COLORS)) };
                 }
             }
             return { bookmarks: [], classes: [], events: {}, colors: JSON.parse(JSON.stringify(DEFAULT_COLORS)) };
@@ -547,7 +542,6 @@
         function saveData(data) {
             try {
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-                console.log('Data saved:', data);
             } catch (e) {
                 console.error('Error saving data:', e);
                 alert('Failed to save data. Check browser storage permissions.');
@@ -558,44 +552,151 @@
             return loadData();
         }
 
-        // Theme Functions
+        // Apply Theme
+        function applyTheme(colors) {
+            const bg = colors.bg;
+            const card = colors.card;
+            const text = colors.text;
+            const accent = colors.accent;
+            const border = colors.border;
+
+            const css = `
+                body {
+                    background: linear-gradient(135deg, ${bg} 0%, ${card} 100%);
+                    color: ${text};
+                }
+
+                button {
+                    background: ${accent};
+                    color: white;
+                }
+
+                button:hover {
+                    opacity: 0.9;
+                }
+
+                button.secondary {
+                    background: ${card};
+                    color: ${text};
+                    border-color: ${border};
+                }
+
+                button.secondary:hover {
+                    background: ${border};
+                }
+
+                button.danger {
+                    background: #ef4444;
+                }
+
+                button.danger:hover {
+                    opacity: 0.9;
+                }
+
+                .card {
+                    background: ${card};
+                    border-color: ${border};
+                }
+
+                .card h2 {
+                    color: ${accent};
+                }
+
+                input, textarea, select {
+                    background: rgba(255, 255, 255, 0.05);
+                    color: ${text};
+                    border-color: ${border};
+                }
+
+                input:focus, textarea:focus, select:focus {
+                    border-color: ${accent};
+                    background: rgba(59, 130, 246, 0.1);
+                }
+
+                .bookmark-item, .class-item, .event-item, .assignment-item {
+                    background: rgba(255, 255, 255, 0.05);
+                    border-color: ${border};
+                }
+
+                .bookmark-item a {
+                    color: ${accent};
+                }
+
+                .item-details {
+                    color: rgba(255, 255, 255, 0.6);
+                }
+
+                .modal {
+                    background: rgba(0, 0, 0, 0.7);
+                }
+
+                .modal-content {
+                    background: ${card};
+                    border-color: ${border};
+                }
+
+                .calendar-day {
+                    border-color: ${border};
+                }
+
+                .calendar-day.has-event {
+                    background: rgba(59, 130, 246, 0.3);
+                    border-color: ${accent};
+                }
+
+                .event-form {
+                    border-top-color: ${border};
+                }
+
+                .assignment-list {
+                    border-top-color: ${border};
+                }
+
+                .modal-header {
+                    border-bottom-color: ${border};
+                }
+
+                .calendar-day-label {
+                    color: rgba(255, 255, 255, 0.6);
+                }
+            `;
+
+            const styleEl = document.getElementById('themeStyle');
+            styleEl.textContent = styleEl.textContent.split('    </style>')[0] + css + '\n    </style>';
+        }
+
         function initializeTheme() {
             const data = getData();
-            console.log('Initializing theme with colors:', data.colors);
-            Object.entries(data.colors).forEach(([key, value]) => {
-                document.documentElement.style.setProperty(`--${key}`, value);
-                console.log('Set color:', key, value);
-            });
+            applyTheme(data.colors);
             renderColorInputs();
         }
 
+        // Theme Functions
         function renderColorInputs() {
             const data = getData();
-            tempColors = JSON.parse(JSON.stringify(data.colors));
             const container = document.getElementById('colorInputs');
-            container.innerHTML = Object.entries(tempColors).map(([key, value]) => `
+            container.innerHTML = Object.entries(data.colors).map(([key, value]) => `
                 <div class="color-input">
                     <label>${key.replace(/-/g, ' ')}</label>
                     <div class="color-picker-wrapper">
-                        <input type="color" value="${value}" onchange="tempColors['${key}'] = this.value; previewColor('${key}', this.value)">
-                        <span style="font-size: 0.75rem; color: var(--text-secondary);" id="color-${key}">${value}</span>
+                        <input type="color" value="${value}" id="color-${key}">
+                        <span style="font-size: 0.75rem; opacity: 0.7;">${value}</span>
                     </div>
                 </div>
             `).join('');
         }
 
-        function previewColor(key, value) {
-            document.documentElement.style.setProperty(`--${key}`, value);
-            document.getElementById(`color-${key}`).textContent = value;
-        }
-
         function saveTheme() {
             const data = getData();
-            data.colors = tempColors;
-            saveData(data);
-            Object.entries(tempColors).forEach(([key, value]) => {
-                document.documentElement.style.setProperty(`--${key}`, value);
+            const colorInputs = document.querySelectorAll('input[type="color"]');
+            const colorNames = Object.keys(data.colors);
+            
+            colorNames.forEach((key, i) => {
+                data.colors[key] = colorInputs[i].value;
             });
+
+            saveData(data);
+            applyTheme(data.colors);
             alert('Colors saved successfully!');
             closeModal('settingsModal');
         }
@@ -604,9 +705,9 @@
             const data = getData();
             data.colors = JSON.parse(JSON.stringify(DEFAULT_COLORS));
             saveData(data);
-            initializeTheme();
+            applyTheme(data.colors);
+            renderColorInputs();
             alert('Theme reset to default!');
-            closeModal('settingsModal');
         }
 
         // Bookmark Functions
@@ -679,20 +780,30 @@
                 container.innerHTML = '<div class="empty-state">No classes yet</div>';
                 return;
             }
-            container.innerHTML = data.classes.map((c, i) => `
-                <div class="class-item">
-                    <div class="item-content">
-                        <div class="item-title">${c.name}</div>
-                        ${c.time ? `<div class="item-details">Time: ${c.time}</div>` : ''}
-                        ${c.link ? `<div class="item-details"><a href="${c.link}" target="_blank" style="color: var(--accent-light);">Class Link</a></div>` : ''}
-                        ${c.notes ? `<div class="item-details">Notes: ${c.notes}</div>` : ''}
+            container.innerHTML = data.classes.map((c, i) => {
+                const assignments = c.assignments || [];
+                const hw = assignments.filter(a => a.type === 'homework');
+                const tests = assignments.filter(a => a.type === 'test');
+                return `
+                    <div class="class-item">
+                        <div class="item-content">
+                            <div class="item-title">${c.name}</div>
+                            ${c.time ? `<div class="item-details">Time: ${c.time}</div>` : ''}
+                            ${c.link ? `<div class="item-details"><a href="${c.link}" target="_blank" style="color: inherit;">Class Link</a></div>` : ''}
+                            ${c.notes ? `<div class="item-details">Notes: ${c.notes}</div>` : ''}
+                            ${assignments.length > 0 ? `<div class="assignment-list">
+                                ${hw.length > 0 ? `<div>HW: ${hw.length}</div>` : ''}
+                                ${tests.length > 0 ? `<div>Tests: ${tests.length}</div>` : ''}
+                            </div>` : ''}
+                        </div>
+                        <div class="item-actions">
+                            <button onclick="openClassModal(${i})">Edit</button>
+                            <button onclick="openAssignmentModal(${i})">Add</button>
+                            <button class="danger" onclick="deleteClass(${i})">Delete</button>
+                        </div>
                     </div>
-                    <div class="item-actions">
-                        <button onclick="openClassModal(${i})">Edit</button>
-                        <button class="danger" onclick="deleteClass(${i})">Delete</button>
-                    </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
         function openClassModal(index) {
@@ -722,10 +833,12 @@
                 name,
                 time: document.getElementById('classTime').value.trim(),
                 link: document.getElementById('classLink').value.trim(),
-                notes: document.getElementById('classNotes').value.trim()
+                notes: document.getElementById('classNotes').value.trim(),
+                assignments: []
             };
             const data = getData();
             if (editingClassIndex !== null) {
+                classData.assignments = data.classes[editingClassIndex].assignments || [];
                 data.classes[editingClassIndex] = classData;
             } else {
                 data.classes.push(classData);
@@ -742,6 +855,43 @@
                 saveData(data);
                 renderClasses();
             }
+        }
+
+        function openAssignmentModal(classIndex) {
+            currentClassForAssignment = classIndex;
+            document.getElementById('assignmentType').value = 'homework';
+            document.getElementById('assignmentTitle').value = '';
+            document.getElementById('assignmentDue').value = '';
+            document.getElementById('assignmentDetails').value = '';
+            document.getElementById('assignmentModal').classList.add('active');
+        }
+
+        function saveAssignment() {
+            const type = document.getElementById('assignmentType').value;
+            const title = document.getElementById('assignmentTitle').value.trim();
+            const due = document.getElementById('assignmentDue').value;
+            const details = document.getElementById('assignmentDetails').value.trim();
+
+            if (!title || !due) {
+                alert('Please fill in title and due date');
+                return;
+            }
+
+            const data = getData();
+            if (!data.classes[currentClassForAssignment].assignments) {
+                data.classes[currentClassForAssignment].assignments = [];
+            }
+
+            data.classes[currentClassForAssignment].assignments.push({
+                type,
+                title,
+                due,
+                details
+            });
+
+            saveData(data);
+            renderClasses();
+            closeModal('assignmentModal');
         }
 
         // Calendar Functions
@@ -770,7 +920,7 @@
                 const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                 const hasEvent = data.events[dateStr] !== undefined;
                 const isSelected = selectedDate === dateStr;
-                grid.innerHTML += `<div class="calendar-day ${hasEvent ? 'has-event' : ''}" onclick="selectDate('${dateStr}')" style="${isSelected ? 'background: rgba(59, 130, 246, 0.5);' : ''}">${day}</div>`;
+                grid.innerHTML += `<div class="calendar-day ${hasEvent ? 'has-event' : ''}" onclick="selectDate('${dateStr}')" style="${isSelected ? 'opacity: 0.6;' : ''}">${day}</div>`;
             }
 
             for (let day = 1; day <= (42 - daysInMonth - firstDay); day++) {
@@ -893,13 +1043,9 @@
 
         // Initialize
         window.addEventListener('load', () => {
-            console.log('Page loaded, initializing...');
             initializeTheme();
             renderBookmarks();
             renderClasses();
             renderCalendar();
-            console.log('Initialization complete');
         });
     </script>
-</body>
-</html>
