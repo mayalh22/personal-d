@@ -508,11 +508,17 @@
     <script>
         const STORAGE_KEY = 'personalDashboard';
         const DEFAULT_COLORS = {
-            'bg': '#0f172a',
-            'card': '#1e293b',
-            'text': '#f1f5f9',
+            'bg-primary': '#0f172a',
+            'bg-secondary': '#1e293b',
+            'card-bg': '#1e293b',
             'accent': '#3b82f6',
-            'border': '#334155'
+            'accent-light': '#60a5fa',
+            'text-primary': '#f1f5f9',
+            'text-secondary': '#cbd5e1',
+            'border': '#334155',
+            'success': '#10b981',
+            'warning': '#f59e0b',
+            'danger': '#ef4444'
         };
 
         let currentDate = new Date();
@@ -554,16 +560,26 @@
 
         // Apply Theme
         function applyTheme(colors) {
-            const bg = colors.bg;
-            const card = colors.card;
-            const text = colors.text;
+            const bgPrimary = colors['bg-primary'];
+            const bgSecondary = colors['bg-secondary'];
+            const cardBg = colors['card-bg'];
             const accent = colors.accent;
+            const accentLight = colors['accent-light'];
+            const textPrimary = colors['text-primary'];
+            const textSecondary = colors['text-secondary'];
             const border = colors.border;
+            const success = colors.success;
+            const warning = colors.warning;
+            const danger = colors.danger;
 
             const css = `
                 body {
-                    background: linear-gradient(135deg, ${bg} 0%, ${card} 100%);
-                    color: ${text};
+                    background: linear-gradient(135deg, ${bgPrimary} 0%, ${bgSecondary} 100%);
+                    color: ${textPrimary};
+                }
+
+                h1, .item-title {
+                    color: ${textPrimary};
                 }
 
                 button {
@@ -572,12 +588,12 @@
                 }
 
                 button:hover {
-                    opacity: 0.9;
+                    background: ${accentLight};
                 }
 
                 button.secondary {
-                    background: ${card};
-                    color: ${text};
+                    background: ${cardBg};
+                    color: ${textPrimary};
                     border-color: ${border};
                 }
 
@@ -586,7 +602,7 @@
                 }
 
                 button.danger {
-                    background: #ef4444;
+                    background: ${danger};
                 }
 
                 button.danger:hover {
@@ -594,8 +610,9 @@
                 }
 
                 .card {
-                    background: ${card};
+                    background: ${cardBg};
                     border-color: ${border};
+                    color: ${textPrimary};
                 }
 
                 .card h2 {
@@ -604,8 +621,12 @@
 
                 input, textarea, select {
                     background: rgba(255, 255, 255, 0.05);
-                    color: ${text};
+                    color: ${textPrimary};
                     border-color: ${border};
+                }
+
+                input::placeholder, textarea::placeholder {
+                    color: ${textSecondary};
                 }
 
                 input:focus, textarea:focus, select:focus {
@@ -616,14 +637,23 @@
                 .bookmark-item, .class-item, .event-item, .assignment-item {
                     background: rgba(255, 255, 255, 0.05);
                     border-color: ${border};
+                    color: ${textPrimary};
                 }
 
-                .bookmark-item a {
-                    color: ${accent};
+                .bookmark-item a, .class-item a {
+                    color: ${accentLight};
                 }
 
                 .item-details {
-                    color: rgba(255, 255, 255, 0.6);
+                    color: ${textSecondary};
+                }
+
+                .item-details a {
+                    color: ${accentLight};
+                }
+
+                .empty-state {
+                    color: ${textSecondary};
                 }
 
                 .modal {
@@ -631,17 +661,51 @@
                 }
 
                 .modal-content {
-                    background: ${card};
+                    background: ${cardBg};
                     border-color: ${border};
+                    color: ${textPrimary};
+                }
+
+                .modal-header {
+                    border-bottom-color: ${border};
+                    color: ${textPrimary};
+                }
+
+                .modal-header h3 {
+                    color: ${textPrimary};
+                }
+
+                .close-btn {
+                    color: ${textSecondary};
+                }
+
+                .form-group label {
+                    color: ${textSecondary};
                 }
 
                 .calendar-day {
                     border-color: ${border};
+                    color: ${textPrimary};
+                    background: rgba(255, 255, 255, 0.02);
+                }
+
+                .calendar-day:hover {
+                    background: rgba(59, 130, 246, 0.2);
+                    border-color: ${accent};
                 }
 
                 .calendar-day.has-event {
                     background: rgba(59, 130, 246, 0.3);
                     border-color: ${accent};
+                }
+
+                .calendar-day-label {
+                    color: ${textSecondary};
+                }
+
+                .calendar-day.other-month {
+                    color: ${textSecondary};
+                    opacity: 0.5;
                 }
 
                 .event-form {
@@ -650,14 +714,29 @@
 
                 .assignment-list {
                     border-top-color: ${border};
+                    color: ${textPrimary};
                 }
 
-                .modal-header {
-                    border-bottom-color: ${border};
+                .assignment-badge.homework {
+                    background: ${accent};
+                    color: white;
                 }
 
-                .calendar-day-label {
-                    color: rgba(255, 255, 255, 0.6);
+                .assignment-badge.test {
+                    background: ${warning};
+                    color: white;
+                }
+
+                .success {
+                    background: ${success};
+                }
+
+                header {
+                    color: ${textPrimary};
+                }
+
+                .color-picker-wrapper span {
+                    color: ${textSecondary};
                 }
             `;
 
@@ -688,16 +767,27 @@
 
         function saveTheme() {
             const data = getData();
-            const colorInputs = document.querySelectorAll('input[type="color"]');
+            const colorInputs = document.querySelectorAll('#colorInputs input[type="color"]');
             const colorNames = Object.keys(data.colors);
             
             colorNames.forEach((key, i) => {
-                data.colors[key] = colorInputs[i].value;
+                if (colorInputs[i]) {
+                    data.colors[key] = colorInputs[i].value;
+                }
             });
 
+            console.log('Saving colors:', data.colors);
             saveData(data);
-            applyTheme(data.colors);
-            alert('Colors saved successfully!');
+            
+            // Force full page refresh of styles
+            const styleEl = document.getElementById('themeStyle');
+            styleEl.textContent = '';
+            setTimeout(() => {
+                applyTheme(data.colors);
+                console.log('Colors applied');
+            }, 10);
+            
+            alert('Colors saved successfully!\nPlease refresh to see effect');
             closeModal('settingsModal');
         }
 
