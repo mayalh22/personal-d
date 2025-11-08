@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Personal Dashboard</title>
+    <title>Dashboard</title>
     <style id="themeStyle">
         * {
             margin: 0;
@@ -66,19 +66,19 @@
         .main-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 2rem;
+            gap: 1rem;
         }
 
         .left-side {
             display: flex;
             flex-direction: column;
-            gap: 2rem;
+            gap: 3rem;
         }
 
         .card {
             border: 1px solid;
             border-radius: 0.75rem;
-            padding: 1.5rem;
+            padding: 1rem;
             transition: all 0.3s ease;
             flex: 1;
         }
@@ -99,7 +99,7 @@
             border-radius: 0.375rem;
             font-family: inherit;
             font-size: 0.875rem;
-            margin-bottom: 0.5rem;
+            margin-bottom: 1rem;
         }
 
         input:focus, textarea:focus, select:focus {
@@ -119,13 +119,13 @@
 
         .bookmark-item, .class-item, .event-item, .assignment-item {
             border: 1px solid;
-            padding: 0.75rem;
+            padding: 1rem;
             border-radius: 0.375rem;
-            margin-bottom: 0.75rem;
+            margin-bottom: 1rem;
             display: flex;
             justify-content: space-between;
             align-items: start;
-            gap: 0.75rem;
+            gap: 1rem;
         }
 
         .bookmark-item a {
@@ -144,7 +144,8 @@
 
         .item-title {
             font-weight: 500;
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
         }
 
         .item-details {
@@ -363,7 +364,7 @@
 <body>
     <div class="container">
         <header>
-            <h1>Personal Dashboard</h1>
+            <h1>Dashboard</h1>
             <div class="header-buttons">
                 <button onclick="openSettingsModal()">Settings</button>
                 <button class="secondary" onclick="exportData()">Export</button>
@@ -403,6 +404,7 @@
                         <div class="form-group">
                             <label>Add/Edit Event</label>
                             <input type="text" id="eventTitle" placeholder="Event name">
+                            <input type="time" id="eventTime" placeholder="Time (optional)">
                             <textarea id="eventDesc" placeholder="Description (optional)" rows="2"></textarea>
                             <button onclick="addEvent()" style="width: 100%;">Add Event</button>
                         </div>
@@ -420,9 +422,35 @@
                 <h3>Customize Theme</h3>
                 <button class="close-btn" onclick="closeModal('settingsModal')">×</button>
             </div>
-            <div class="color-inputs" id="colorInputs"></div>
-            <button onclick="saveTheme()" style="width: 100%; margin-top: 1rem;">Save Colors</button>
-            <button onclick="resetTheme()" class="secondary" style="width: 100%; margin-top: 0.5rem;">Reset to Default</button>
+            
+            <div style="margin-bottom: 1.5rem;">
+                <h4 style="margin-bottom: 1rem; font-size: 0.95rem;">Colors</h4>
+                <div class="color-inputs" id="colorInputs"></div>
+            </div>
+
+            <div style="border-top: 1px solid; padding-top: 1rem; margin-bottom: 1rem; border-top-color: rgba(255, 255, 255, 0.1);">
+                <h4 style="margin-bottom: 1rem; font-size: 0.95rem;">Font & Text</h4>
+                <div class="form-group">
+                    <label>Font Family</label>
+                    <select id="fontFamily" onchange="updateFont()">
+                        <option value="system">System (Default)</option>
+                        <option value="serif">Serif</option>
+                        <option value="mono">Monospace</option>
+                        <option value="sans-alt">Alternative Sans</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Text Size</label>
+                    <select id="textSize" onchange="updateFont()">
+                        <option value="small">Small</option>
+                        <option value="medium">Medium (Default)</option>
+                        <option value="large">Large</option>
+                    </select>
+                </div>
+            </div>
+
+            <button onclick="saveTheme()" style="width: 100%; margin-bottom: 0.5rem;">Save Settings</button>
+            <button onclick="resetTheme()" class="secondary" style="width: 100%;">Reset to Default</button>
         </div>
     </div>
 
@@ -439,7 +467,7 @@
             </div>
             <div class="form-group">
                 <label>URL</label>
-                <input type="text" id="bookmarkUrl" placeholder="https://example.com">
+                <input type="text" id="bookmarkUrl" placeholder="google.com or https://example.com">
             </div>
             <button onclick="saveBookmark()" style="width: 100%; margin-bottom: 0.5rem;">Save Bookmark</button>
             <button class="secondary" onclick="closeModal('bookmarkModal')" style="width: 100%;">Cancel</button>
@@ -536,13 +564,16 @@
                     if (!parsed.colors) {
                         parsed.colors = JSON.parse(JSON.stringify(DEFAULT_COLORS));
                     }
+                    if (!parsed.settings) {
+                        parsed.settings = { font: 'system', textSize: 'medium' };
+                    }
                     return parsed;
                 } catch (e) {
                     console.error('Error parsing stored data:', e);
-                    return { bookmarks: [], classes: [], events: {}, colors: JSON.parse(JSON.stringify(DEFAULT_COLORS)) };
+                    return { bookmarks: [], classes: [], events: {}, colors: JSON.parse(JSON.stringify(DEFAULT_COLORS)), settings: { font: 'system', textSize: 'medium' } };
                 }
             }
-            return { bookmarks: [], classes: [], events: {}, colors: JSON.parse(JSON.stringify(DEFAULT_COLORS)) };
+            return { bookmarks: [], classes: [], events: {}, colors: JSON.parse(JSON.stringify(DEFAULT_COLORS)), settings: { font: 'system', textSize: 'medium' } };
         }
 
         function saveData(data) {
@@ -582,6 +613,11 @@
                     color: ${textPrimary};
                 }
 
+                .card h2 {
+                    color: ${accent};
+                    margin-bottom: 1rem;
+                }
+
                 button {
                     background: ${accent};
                     color: white;
@@ -613,10 +649,6 @@
                     background: ${cardBg};
                     border-color: ${border};
                     color: ${textPrimary};
-                }
-
-                .card h2 {
-                    color: ${accent};
                 }
 
                 input, textarea, select {
@@ -747,7 +779,9 @@
         function initializeTheme() {
             const data = getData();
             applyTheme(data.colors);
+            applyFontSettings(data.settings);
             renderColorInputs();
+            renderFontSettings();
         }
 
         // Theme Functions
@@ -776,7 +810,12 @@
                 }
             });
 
-            console.log('Saving colors:', data.colors);
+            data.settings = {
+                font: document.getElementById('fontFamily').value,
+                textSize: document.getElementById('textSize').value
+            };
+
+            console.log('Saving settings:', data);
             saveData(data);
             
             // Force full page refresh of styles
@@ -784,20 +823,90 @@
             styleEl.textContent = '';
             setTimeout(() => {
                 applyTheme(data.colors);
-                console.log('Colors applied');
+                applyFontSettings(data.settings);
+                console.log('Settings applied');
             }, 10);
             
-            alert('Colors saved successfully!\nPlease refresh to see effect');
+            alert('Settings saved successfully!\nPlease refresh to see effect');
             closeModal('settingsModal');
         }
 
         function resetTheme() {
             const data = getData();
             data.colors = JSON.parse(JSON.stringify(DEFAULT_COLORS));
+            data.settings = { font: 'system', textSize: 'medium' };
             saveData(data);
             applyTheme(data.colors);
+            applyFontSettings(data.settings);
             renderColorInputs();
+            renderFontSettings();
             alert('Theme reset to default!');
+        }
+
+        function renderFontSettings() {
+            const data = getData();
+            document.getElementById('fontFamily').value = data.settings?.font || 'system';
+            document.getElementById('textSize').value = data.settings?.textSize || 'medium';
+        }
+
+        function updateFont() {
+            const data = getData();
+            data.settings = {
+                font: document.getElementById('fontFamily').value,
+                textSize: document.getElementById('textSize').value
+            };
+            applyFontSettings(data.settings);
+        }
+
+        function applyFontSettings(settings) {
+            const fontFamily = settings.font || 'system';
+            const textSize = settings.textSize || 'medium';
+
+            let fontStack = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+            if (fontFamily === 'serif') {
+                fontStack = 'Georgia, "Times New Roman", serif';
+            } else if (fontFamily === 'mono') {
+                fontStack = '"Courier New", monospace';
+            } else if (fontFamily === 'sans-alt') {
+                fontStack = 'Trebuchet MS, Lucida Grande, sans-serif';
+            }
+
+            let baseFontSize = '16px';
+            if (textSize === 'small') {
+                baseFontSize = '14px';
+            } else if (textSize === 'large') {
+                baseFontSize = '18px';
+            }
+
+            const css = `
+                body, button, input, textarea, select {
+                    font-family: ${fontStack};
+                    font-size: ${baseFontSize};
+                }
+                
+                h1 {
+                    font-size: calc(${baseFontSize} * 1.75);
+                }
+                
+                h2 {
+                    font-size: calc(${baseFontSize} * 1.25);
+                }
+                
+                h3 {
+                    font-size: calc(${baseFontSize} * 1.1);
+                }
+            `;
+
+            const styleEl = document.getElementById('themeStyle');
+            let existingCSS = styleEl.textContent;
+            
+            // Remove old font settings if they exist
+            existingCSS = existingCSS.replace(/body, button, input, textarea, select \{[^}]*font-family:[^}]*font-size:[^}]*\}[\s\n]*/gs, '');
+            existingCSS = existingCSS.replace(/h1 \{[^}]*font-size:[^}]*\}[\s\n]*/gs, '');
+            existingCSS = existingCSS.replace(/h2 \{[^}]*font-size:[^}]*\}[\s\n]*/gs, '');
+            existingCSS = existingCSS.replace(/h3 \{[^}]*font-size:[^}]*\}[\s\n]*/gs, '');
+            
+            styleEl.textContent = existingCSS.split('    </style>')[0] + css + '\n    </style>';
         }
 
         // Bookmark Functions
@@ -837,10 +946,14 @@
 
         function saveBookmark() {
             const title = document.getElementById('bookmarkTitle').value.trim();
-            const url = document.getElementById('bookmarkUrl').value.trim();
+            let url = document.getElementById('bookmarkUrl').value.trim();
             if (!title || !url) {
                 alert('Please fill in all fields');
                 return;
+            }
+            // Add https:// if no protocol is provided
+            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                url = 'https://' + url;
             }
             const data = getData();
             if (editingBookmarkIndex !== null) {
@@ -1032,15 +1145,17 @@
                 return;
             }
             const title = document.getElementById('eventTitle').value.trim();
+            const time = document.getElementById('eventTime').value;
             const desc = document.getElementById('eventDesc').value.trim();
             if (!title) {
                 alert('Please enter an event title');
                 return;
             }
             const data = getData();
-            data.events[selectedDate] = { title, desc };
+            data.events[selectedDate] = { title, time, desc };
             saveData(data);
             document.getElementById('eventTitle').value = '';
+            document.getElementById('eventTime').value = '';
             document.getElementById('eventDesc').value = '';
             renderCalendar();
         }
@@ -1060,11 +1175,12 @@
 
             container.innerHTML = '<div style="margin-top: 1rem;"><strong>Events:</strong></div>' + events.map(([date, event]) => {
                 const [, , day] = date.split('-');
+                const timeStr = event.time ? ` at ${event.time}` : '';
                 return `
                     <div class="event-item">
                         <div class="item-content">
                             <div class="item-title">${event.title}</div>
-                            <div class="item-details">${day} - ${event.desc ? event.desc : 'No description'}</div>
+                            <div class="item-details">${day}${timeStr} - ${event.desc ? event.desc : 'No description'}</div>
                         </div>
                         <div class="item-actions">
                             <button onclick="deleteEvent('${date}')" class="danger">Delete</button>
