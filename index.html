@@ -33,7 +33,7 @@
 
         h1 {
             font-size: 1.75rem;
-            font-weight: 600;
+            font-weight: 100;
         }
 
         .header-buttons {
@@ -48,7 +48,7 @@
             border-radius: 0.5rem;
             cursor: pointer;
             font-size: 0.875rem;
-            font-weight: 500;
+            font-weight: 300;
             transition: all 0.3s ease;
         }
 
@@ -60,8 +60,6 @@
             border: 1px solid;
         }
 
-        button.danger {
-        }
 
         .main-grid {
             display: grid;
@@ -143,7 +141,7 @@
         }
 
         .item-title {
-            font-weight: 500;
+            font-weight: 300;
             margin-bottom: 0.5rem;
             font-size: 1rem;
         }
@@ -216,7 +214,7 @@
         .calendar-day-label {
             text-align: center;
             font-size: 0.75rem;
-            font-weight: 600;
+            font-weight: 300;
             padding: 0.5rem 0;
         }
 
@@ -237,7 +235,7 @@
         }
 
         .calendar-day.has-event {
-            font-weight: 600;
+            font-weight: 300;
         }
 
         .calendar-day.other-month {
@@ -314,7 +312,7 @@
             padding: 0.25rem 0.5rem;
             border-radius: 0.25rem;
             font-size: 0.7rem;
-            font-weight: 600;
+            font-weight: 300;
             margin-right: 0.5rem;
         }
 
@@ -344,6 +342,7 @@
 
             h1 {
                 font-size: 1.5rem;
+                font-weight: 300rem;
             }
 
             .left-side {
@@ -535,19 +534,17 @@
 
     <script>
         const STORAGE_KEY = 'personalDashboard';
-        const DEFAULT_COLORS = {
-            'bg-primary': '#0f172a',
-            'bg-secondary': '#1e293b',
-            'card-bg': '#1e293b',
-            'accent': '#3b82f6',
-            'accent-light': '#60a5fa',
-            'text-primary': '#f1f5f9',
-            'text-secondary': '#cbd5e1',
-            'border': '#334155',
-            'success': '#10b981',
-            'warning': '#f59e0b',
-            'danger': '#ef4444'
-        };
+const DEFAULT_COLORS = {
+  'bg-primary': '#fdf6e3',
+  'bg-secondary': '#fdf6e3',
+  'card-bg': '#00712a',
+  'accent': '#f26522',          // buttons, card titles
+  'text-primary': '#ffc80b',    // headings
+  'text-secondary': '#ffc80b',  // body text on bg
+  'success': '#005599',
+  'warning': '#005599',
+  'danger': '#ff9b90'
+};
 
         let currentDate = new Date();
         let editingBookmarkIndex = null;
@@ -857,58 +854,55 @@
             };
             applyFontSettings(data.settings);
         }
+function applyFontSettings(settings) {
+    const fontFamily = settings.font || 'system';
+    const textSize = settings.textSize || 'medium';
 
-        function applyFontSettings(settings) {
-            const fontFamily = settings.font || 'system';
-            const textSize = settings.textSize || 'medium';
+    // 1. Determine Font Stack
+    let fontStack = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+    if (fontFamily === 'serif') {
+        fontStack = 'Georgia, "Times New Roman", serif';
+    } else if (fontFamily === 'mono') {
+        fontStack = '"Courier New", monospace';
+    } else if (fontFamily === 'sans-alt') {
+        fontStack = 'Trebuchet MS, Lucida Grande, sans-serif';
+    }
 
-            let fontStack = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-            if (fontFamily === 'serif') {
-                fontStack = 'Georgia, "Times New Roman", serif';
-            } else if (fontFamily === 'mono') {
-                fontStack = '"Courier New", monospace';
-            } else if (fontFamily === 'sans-alt') {
-                fontStack = 'Trebuchet MS, Lucida Grande, sans-serif';
-            }
+    // 2. Determine Base Size
+    let baseFontSize = '16px';
+    if (textSize === 'small') {
+        baseFontSize = '14px';
+    } else if (textSize === 'large') {
+        baseFontSize = '18px';
+    }
 
-            let baseFontSize = '16px';
-            if (textSize === 'small') {
-                baseFontSize = '14px';
-            } else if (textSize === 'large') {
-                baseFontSize = '18px';
-            }
-
-            const css = `
-                body, button, input, textarea, select {
-                    font-family: ${fontStack};
-                    font-size: ${baseFontSize};
-                }
-                
-                h1 {
-                    font-size: calc(${baseFontSize} * 1.75);
-                }
-                
-                h2 {
-                    font-size: calc(${baseFontSize} * 1.25);
-                }
-                
-                h3 {
-                    font-size: calc(${baseFontSize} * 1.1);
-                }
-            `;
-
-            const styleEl = document.getElementById('themeStyle');
-            let existingCSS = styleEl.textContent;
-            
-            // Remove old font settings if they exist
-            existingCSS = existingCSS.replace(/body, button, input, textarea, select \{[^}]*font-family:[^}]*font-size:[^}]*\}[\s\n]*/gs, '');
-            existingCSS = existingCSS.replace(/h1 \{[^}]*font-size:[^}]*\}[\s\n]*/gs, '');
-            existingCSS = existingCSS.replace(/h2 \{[^}]*font-size:[^}]*\}[\s\n]*/gs, '');
-            existingCSS = existingCSS.replace(/h3 \{[^}]*font-size:[^}]*\}[\s\n]*/gs, '');
-            
-            styleEl.textContent = existingCSS.split('    </style>')[0] + css + '\n    </style>';
+    // 3. Generate CSS - We explicitly set font-weight to 300 (Light) 
+    // for headers to override browser defaults.
+    const css = `
+        body, button, input, textarea, select, .item-title, .calendar-day-label {
+            font-family: ${fontStack} !important;
+            font-size: ${baseFontSize};
+            font-weight: 300; 
+        }     
+        h1, h2, h3, h4, strong, b {
+            font-weight: 400; 
         }
+        h1 { font-size: calc(${baseFontSize} * 1.75); }
+        h2 { font-size: calc(${baseFontSize} * 1.25); }
+        h3 { font-size: calc(${baseFontSize} * 1.1); }
+        .calendar-day.has-event, .assignment-badge {
+            font-weight: 400;
+        }
+    `;
 
+    const styleEl = document.getElementById('themeStyle');
+    let existingCSS = styleEl.textContent;
+    
+    // Clean up any previous injections to prevent the style tag from growing forever
+    const cleanCSS = existingCSS.replace(/\/\* FONT_START \*\/[\s\S]*\/\* FONT_END \*\//g, "");
+    
+    styleEl.textContent = cleanCSS + `\n/* FONT_START */\n${css}\n/* FONT_END */`;
+}
         // Bookmark Functions
         function renderBookmarks() {
             const data = getData();
