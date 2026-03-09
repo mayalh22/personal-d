@@ -1173,7 +1173,7 @@
                 return;
             }
 
-            container.innerHTML = '<div style="margin-top: 1rem;"><strong>Events:</strong></div>' + events.map(([date, event]) => {
+            container.innerHTML = '<div style="margin-top: 1rem;">Events:</div>' + events.map(([date, event]) => {
                 const [, , day] = date.split('-');
                 const timeStr = event.time ? ` at ${event.time}` : '';
                 return `
